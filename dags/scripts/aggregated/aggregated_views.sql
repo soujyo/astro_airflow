@@ -19,11 +19,10 @@ ORDER BY
 total_visits DESC;
 
 --Calculates total sessions,bounces and bounce rate,AVERAGE_SESSION_DURATION_SECS from each country and city
-CREATE OR REPLACE VIEW {{ params.agg_db }}.{{ params.agg_schema }}.SESSION_BOUNCE_RATE_PER_CITY_COUNTRY
+CREATE OR REPLACE VIEW {{ params.agg_db }}.{{ params.agg_schema }}.SESSION_BOUNCE_RATE_PER_COUNTRY
 AS
 select
 geonetwork_country as country,
-geonetwork_city as city,
 sum(totals_visits) as sessions,
 sum(case when totals_bounces = 1 then totals_visits else 0 end) as total_bounces,
 ROUND(sum(case when totals_bounces = 1 then totals_visits else 0 end)/sum(totals_visits),3) as bounce_rate,
@@ -32,7 +31,7 @@ from
 {{ params.stage_db }}.{{ params.stage_schema }}.{{ params.stage_table_compact }}
 WHERE DATE BETWEEN DATE AND dateadd(day, -30, current_date()) AND totals_visits = 1
 group by
-country,city
+country
 order by COUNTRY;
 
 --Calculates traffic source metrics for transactions,revenue,bounce_rate and conversion rate
