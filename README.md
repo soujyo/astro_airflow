@@ -72,7 +72,7 @@ The dag consists of 9 tasks which are run in chain as the given logic. We have u
 
 6.`snowflake_load_stage_table_exploded`= This uses `SnowflakeOperator` to load the exploded table as full refresh from  the compacted stage table. Load scripts can be found in  stage folder. This table is optional and can be used for analysis if complete unnested columns are to be for data analysis.
 
-7.`snowflake_load_aggregated_views` = This uses `SnowflakeOperator` to create aggregated views from  the compacted stage table. This provides metrics and diamensions about the data set for reporting. We can even use to create tables in the aggregated layer instead of views.
+7.`snowflake_load_aggregated_views` = This uses `SnowflakeOperator` to create aggregated views from  the compacted stage table. This provides metrics and dimensions  about the data set for reporting. We can even use to create tables in the aggregated layer instead of views.
 
 
 All variables used in this DAG which can be configurable are:
