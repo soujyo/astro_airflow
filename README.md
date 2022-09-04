@@ -89,5 +89,6 @@ All variables used in this DAG which can be configurable are:
 `SNOWFLAKE_STAGE='S3_STAGE'`
 `SNOWFLAKE_CONN_ID='snowflake_default'`
 
+All relevant tasks are grouped into TaskGroups for better view in the UI.
 Once the DAG has run successfully, we can check the snowflake tables and views in stage and aggregated layers to be loaded.
 
