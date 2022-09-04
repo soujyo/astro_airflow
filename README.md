@@ -60,12 +60,20 @@ About the dag and ETL pipeline
 
 The dag consists of 9 tasks which are run in chain as the given logic. We have used Dummy operators for `start` and `end` tasks(Dummy email on completion of pipeline).
 1.`snowflake_create_raw_tables` = This uses `SnowflakeOperator` to create raw tables in snowflake raw layer as per the DDL scripts in raw folder.
-2.`get_bucket_files` = This `PythonOperator` uses S3 hook to read the number of raw files to be loaded into raw zone of Snowflake.
+
+
+2.`get_bucket_files` = This `PythonOperator` uses S3 hook to read the number of raw files to be loaded into raw zone of Snowflake. 
+
 3.`s3_to_snowflake_raw_zone` = This task uses `S3ToSnowflakeOperator` spawns dynamically into multiple tasks equivalent to the number of files in S3 bucket detected by `get_bucket_files` task.This is used to parallelize the loading of data if we have numerous files in bucket. But can be optimized based on the number of cores and celery executor of airflow.
+
 4.`snowflake_create_stage_tables` = This uses `SnowflakeOperator` to create stage tables as per the DDL scripts in stage folder. We have two tables in the stage layer to be created one being the compact table and other being an exploded table with unnested columns.
+
 5.`snowflake_load_stage_table_compact`= This uses `SnowflakeOperator` to load the compacted table using incremental upserts from the raw table. Load scripts can be found in  stage folder.
-5.`snowflake_load_stage_table_exploded`= This uses `SnowflakeOperator` to load the exploded table as full refresh from  the compacted stage table. Load scripts can be found in  stage folder. This table is optional and can be used for analysis if complete unnested columns are to be for data analysis.
-6.`snowflake_load_aggregated_views` = This uses `SnowflakeOperator` to create aggregated views from  the compacted stage table. This provides metrics and diamensions about the data set for reporting. We can even use to create tables in the aggregated layer instead of views.
+
+6.`snowflake_load_stage_table_exploded`= This uses `SnowflakeOperator` to load the exploded table as full refresh from  the compacted stage table. Load scripts can be found in  stage folder. This table is optional and can be used for analysis if complete unnested columns are to be for data analysis.
+
+7.`snowflake_load_aggregated_views` = This uses `SnowflakeOperator` to create aggregated views from  the compacted stage table. This provides metrics and diamensions about the data set for reporting. We can even use to create tables in the aggregated layer instead of views.
+
 
 All variables used in this DAG which can be configurable are:
 `BUCKET = 'gaassignment'`
